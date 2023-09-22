@@ -1,13 +1,16 @@
 import { Router } from 'express'
 import { UsersController } from '../controllers/Users.js'
 
-export const createProductRouter = ({ usersModel }) => {
-  const ProductsRouter = Router()
+export const createUsersRouter = ({ usersModel }) => {
+  const UsersRouter = Router()
 
   const usersController = new UsersController()
   usersController.usersModel = usersModel
 
-  ProductsRouter.get('/', usersController.getAll)
+  UsersRouter.get('/', usersController.getAll)
+  UsersRouter.post('/', usersController.createUser)
+  UsersRouter.post('/create-team', usersController.createTeam)
+  UsersRouter.post('/join-team', usersController.joinTeam)
 
-  return ProductsRouter
+  return UsersRouter
 }

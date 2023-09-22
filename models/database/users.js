@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise'
 import crypto from 'node:crypto'
-import { validateUser } from '../schemas/User.js'
-import { validateJoinTeam, validateTeam } from '../schemas/Team.js'
+import { validateUser } from '../../schemas/User.js'
+import { validateJoinTeam, validateTeam } from '../../schemas/Team.js'
 
 const connection = await mysql.createConnection({
   host: 'localhost',

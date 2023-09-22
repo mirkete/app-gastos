@@ -15,18 +15,43 @@ export class UsersController {
   }
 
   getAll = async (req, res) => {
-    const data = await this.usersModel.getAll()
-    res.json(data)
+    const result = await this.usersModel.getAll()
+    if (!result.success) {
+      return res.status(500).json(result.error)
+    }
+    res.status(200).json(result.data)
   }
 
-  createUser = (req, res) => {
-    // llamar al modelo
-    res.status(200).send(this.model)
+  create = async (operation, { req, res }) => {
+    const result = await this.usersModel[operation](req.body)
+
+    if (!result.success) {
+      if (result.error.type === 'VALIDATION ERROR') {
+        return res.status(400).json(result.error)
+      }
+
+      return res.status(500).json(result.error)
+    }
+    res.status(201).json(result.data)
   }
 
-  createTeam = (req, res) => {
-    // llamar al modelo
-    res.status(200).send(this.model)
+  createUser = async (req, res) => {
+    return this.create('createUser', { req, res })
+  }
+
+  createTeam = async (req, res) => {
+    return this.create('createTeam', { req, res })
+  }
+
+  joinTeam = async (req, res) => {
+    const result = await this.usersModel.joinTeam(req.body)
+    if (!result.success) {
+      if (result.error.type === 'VALIDATION ERROR') {
+        return res.status(400).json(result.error)
+      }
+      return res.status(500).json(result.error)
+    }
+    res.status(201).json(result.data)
   }
 
   deleteTeam = (req, res) => {
