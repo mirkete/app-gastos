@@ -19,7 +19,7 @@ export class UsersController {
     if (!result.success) {
       return res.status(500).json(result.error)
     }
-    res.status(200).json(result.data)
+    res.json(result.data)
   }
 
   create = async (operation, { req, res }) => {
