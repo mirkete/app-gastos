@@ -5,8 +5,16 @@ const UserSchema = z.object({
   name: z.string().max(36)
 })
 
+const UUIDSchema = z.object({
+  _id: z.string().uuid()
+})
+
 function validateUser (user) {
   return UserSchema.safeParse(user)
 }
 
-export { validateUser }
+function validateUUID (id) {
+  return UUIDSchema.safeParse(id)
+}
+
+export { validateUser, validateUUID }

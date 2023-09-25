@@ -54,6 +54,14 @@ export class UsersController {
     res.status(201).json(result.data)
   }
 
+  getTeams = async (req, res) => {
+    const result = await this.usersModel.getTeams(req.body)
+    if (!result.success) {
+      return res.status(500).json(result.error)
+    }
+    res.status(200).json(result.data)
+  }
+
   deleteTeam = (req, res) => {
     // llamar al modelo
     res.status(200).send(this.model)

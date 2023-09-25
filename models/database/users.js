@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise'
 import crypto from 'node:crypto'
-import { validateUser } from '../../schemas/User.js'
+import { validateUser, validateUUID } from '../../schemas/User.js'
 import { validateJoinTeam, validateTeam } from '../../schemas/Team.js'
 
 const connection = await mysql.createConnection({
@@ -98,6 +98,34 @@ class UsersModel {
       return new ResultObject(true, validData)
     } catch (e) {
       return new ResultObject(false, null, 'DATABASE ERROR', 'Cannot join to team.')
+    }
+  }
+
+  static async getTeams (data) {
+    const validation = validateUUID(data)
+    if (!validation.success) {
+      return new ResultObject(false, null, 'VALIDATION ERROR', 'Ha ocurrido un error en la validacion.')
+    }
+
+    try {
+      const { _id } = validation.data
+      const queryResult = await connection.execute(
+        'SELECT BIN_TO_UUID(team_id) AS team_id from user_teams ' +
+        'WHERE user_id = UUID_TO_BIN(?)',
+        [_id]
+      )
+      const teamIds = queryResult[0].map((obj) => {
+        return obj.team_id
+      })
+      const teamsQueryResult = await connection.execute(
+        'SELECT name, currency from teams ' +
+        'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(teamIds) + ')'
+      )
+      const teams = teamsQueryResult[0]
+
+      return new ResultObject(true, teams)
+    } catch (e) {
+      return new ResultObject(false, null, e, 'No se ha podido realizar la solicitud')
     }
   }
 }

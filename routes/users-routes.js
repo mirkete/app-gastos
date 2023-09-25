@@ -7,7 +7,8 @@ export const createUsersRouter = ({ usersModel }) => {
   const usersController = new UsersController()
   usersController.usersModel = usersModel
   UsersRouter.get('/', usersController.getAll)
-  UsersRouter.post('/users', usersController.createUser)
+  UsersRouter.post('/teams', usersController.getTeams)
+  UsersRouter.post('/create-user', usersController.createUser)
   UsersRouter.post('/create-team', usersController.createTeam)
   UsersRouter.post('/join-team', usersController.joinTeam)
 
