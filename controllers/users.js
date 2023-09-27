@@ -55,8 +55,11 @@ export class UsersController {
   }
 
   getTeams = async (req, res) => {
-    const result = await this.usersModel.getTeams(req.body)
+    const result = await this.usersModel.getTeams(req.params)
     if (!result.success) {
+      if (result.error.type === 'VALIDATION ERROR') {
+        return res.status(400).json(result.error)
+      }
       return res.status(500).json(result.error)
     }
     res.status(200).json(result.data)
@@ -65,5 +68,28 @@ export class UsersController {
   deleteTeam = (req, res) => {
     // llamar al modelo
     res.status(200).send(this.model)
+  }
+
+  getBalance = async (req, res) => {
+    const result = await this.usersModel.getBalance(req.params)
+    if (!result.success) {
+      if (result.error.type === 'VALIDATION ERROR') {
+        return res.status(400).json(result.error)
+      }
+      return res.status(500).json(result.error)
+    }
+    res.status(200).json(result.data)
+  }
+
+  getOneTeam = async (req, res) => {
+    const result = await this.usersModel.getOneTeam(req.params)
+    if (!result.success) {
+      if (result.error.type === 'VALIDATION ERROR') {
+        return res.status(400).json(result.error)
+      }
+      return res.status(500).json(result.error)
+    }
+
+    res.status(200).json(result.data)
   }
 }

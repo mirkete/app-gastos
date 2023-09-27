@@ -12,8 +12,8 @@ const dirname = process.cwd()
 const app = express()
 
 app.use(express.json())
-app.use(express.static(path.join(dirname, 'views')))
-app.use(localURL({ viewsURL: 'views' }))
+app.use(express.static(path.join(dirname, 'web')))
+app.use(localURL({ viewsURL: 'web' }))
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Headers', '*')

@@ -104,7 +104,7 @@ class UsersModel {
   static async getTeams (data) {
     const validation = validateUUID(data)
     if (!validation.success) {
-      return new ResultObject(false, null, 'VALIDATION ERROR', 'Ha ocurrido un error en la validacion.')
+      return new ResultObject(false, null, 'VALIDATION ERROR', 'Invalid UUID.')
     }
 
     try {
@@ -125,7 +125,87 @@ class UsersModel {
 
       return new ResultObject(true, teams)
     } catch (e) {
-      return new ResultObject(false, null, e, 'No se ha podido realizar la solicitud')
+      return new ResultObject(false, null, 'DATABASE ERROR', 'No se ha podido realizar la solicitud')
+    }
+  }
+
+  static async getBalance (data) {
+    const validation = validateUUID(data)
+    if (!validation.success) {
+      return new ResultObject(false, null, 'VALIDATION ERROR', 'Invalid UUID.')
+    }
+
+    try {
+      const { _id } = validation.data
+      const queryResult = await connection.execute(
+        'SELECT BIN_TO_UUID(team_id) AS team_id, balance FROM user_balance ' +
+        'WHERE BIN_TO_UUID(user_id) = ?;',
+        [_id]
+      )
+
+      let totalBalance = 0
+      if (queryResult[0].length > 0) {
+        totalBalance = queryResult[0].reduce((acc, current) => {
+          return (acc += current.balance)
+        }, 0)
+      }
+
+      const balances = {
+        totalBalance,
+        team_balances: queryResult[0]
+      }
+
+      return new ResultObject(true, balances)
+    } catch (e) {
+      return new ResultObject(false, null, e, 'Ha ocurrido un error')
+    }
+  }
+
+  static async getOneTeam (data) {
+    const validation = validateUUID(data)
+    if (!validation.success) {
+      return new ResultObject(false, null, 'VALIDATION ERROR', 'Invalid UUID')
+    }
+    try {
+      const { _id: teamId } = validation.data
+      const teamQueryResult = await connection.execute(
+        'SELECT name, currency, BIN_TO_UUID(_id) AS _id FROM teams ' +
+        'WHERE BIN_TO_UUID(_id) = ?',
+        [teamId]
+      )
+      if (teamQueryResult[0].length === 0) {
+        throw new Error('GROUP-NOT-FOUND')
+      }
+
+      const teamUserIdsQueryResult = await connection.execute(
+        'SELECT BIN_TO_UUID(user_id) AS _id FROM user_teams ' +
+        'WHERE BIN_TO_UUID(team_id) = ?',
+        [teamId]
+      )
+      if (teamUserIdsQueryResult[0].length === 0) {
+        throw new Error('EMPTY-GROUP')
+      }
+
+      const userIds = teamUserIdsQueryResult[0].map((el) => {
+        return el._id
+      })
+
+      const teamUsers = await connection.execute(
+        'SELECT name FROM users ' +
+        'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(userIds) + ')'
+      )
+
+      const teamInfo = {
+        ...teamQueryResult[0][0],
+        users: teamUsers[0]
+      }
+
+      return new ResultObject(true, teamInfo)
+    } catch (e) {
+      if (e.message === 'GROUP-NOT-FOUND' || e.message === 'EMPTY-GROUP') {
+        return new ResultObject(false, null, 'QUERY ERROR', e.message)
+      }
+      return new ResultObject(false, null, 'DATABASE ERROR', 'Ha habido un error de servidor')
     }
   }
 }
