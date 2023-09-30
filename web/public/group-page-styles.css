@@ -1,0 +1,150 @@
+:root{
+  --dark-green:#73CF64;
+  --light-green:#A4F397;
+  --dark-red:#EC5C5C;
+  --light-red:#F08F8F;
+}
+
+body{
+  margin: 8px;
+}
+
+html{
+  font-size: 67.5%;
+}
+
+.bigger-text{
+  font-size: 5em;
+  font-weight: bolder;
+}
+.big-text{
+  font-size: 2.2em;
+  font-weight: bold;
+}
+.medium-text{
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.normal-text{
+  font-size: 1.3em;
+}
+
+*{
+  font-family: system-ui;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body{
+  height: 100%;
+}
+
+.wrapper{
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 15px;
+  height: 100vh;
+  padding: 0px 20px;
+}
+
+.wrapper > *{
+  width: 100%;
+}
+
+.saldo-header{
+  padding: 10px;
+  text-align: center;
+  color: transparent;
+  background: linear-gradient(180deg, black, grey);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.link{
+  text-decoration: none;
+  color: black;
+}
+
+main{
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  overflow: auto;
+  flex-flow: column nowrap;
+}
+
+.balances{
+  flex: 1;
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.members-list{
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.member{
+  width: 100%;
+  height: 90px;
+  display: grid;
+  place-content: center;
+  position: relative;
+}
+
+.figure{
+  background: url("https://img.freepik.com/premium-photo/thoughtful-indian-man-wearing-glasses-looking-away-depression_175356-10008.jpg?w=400");
+  width: 48px;
+  height: 48px;
+  background-size: cover;
+  border-radius: 50%;
+  position: relative;
+}
+
+.balance{
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+}
+
+.balance-positive{
+  left: 20px;
+  transform: translate(100%, -55%);
+  color: var(--dark-green);
+}
+
+.balance-negative{
+  right: 20px;
+  transform: translate(-100%, -50%);
+  color: var(--dark-red);
+}
+
+.balances-footer{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid grey;
+  padding: 10px 15px;
+}
+
+@media (min-width:650px){
+  .member{
+    display: flex;
+    flex-direction: row nowrap; 
+    justify-content: flex-start;
+  }
+
+  .balance, .balance-positive, .balance-negative{
+    left: 80px;
+    transform: translate(0%, -50%);
+  }
+
+  .balances{
+    width: 70%;
+    align-self: center;
+  }
+}

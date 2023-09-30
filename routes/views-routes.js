@@ -13,5 +13,10 @@ export const createViewsRouter = () => {
     res.sendFile(viewsURL + '/cosa.html')
   })
 
+  ViewsRouter.get('/group/:id', (req, res) => {
+    const viewsURL = res.locals.viewsURL
+    res.sendFile(viewsURL + '/group-page.html')
+  })
+
   return ViewsRouter
 }

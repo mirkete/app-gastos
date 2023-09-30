@@ -22,8 +22,8 @@ app.use((req, res, next) => {
 // hacer bien el middleware
 // fijarme porque no dejaba poner headers desde el controller
 
-app.use('/interactions', createUsersRouter({ usersModel: UsersModel }))
-app.use('/', createViewsRouter())
+app.use('/users', createUsersRouter({ usersModel: UsersModel }))
+app.use('/', createViewsRouter({ usersModel: UsersModel }))
 
 obtenerPuerto({ desiredPort: PORT })
   .then((finalPort) => {

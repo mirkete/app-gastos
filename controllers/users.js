@@ -90,6 +90,20 @@ export class UsersController {
       return res.status(500).json(result.error)
     }
 
-    res.status(200).json(result.data)
+    const data = result.data
+    res.status(200).json(data)
+  }
+
+  getMultipleBalances = async (req, res) => {
+    const result = await this.usersModel.getMultipleBalances(req.body)
+    if (!result.success) {
+      if (result.error.type === 'VALIDATION ERROR') {
+        return res.status(400).json(result.error)
+      }
+      return res.status(500).json(result.error)
+    }
+
+    const data = result.data
+    res.status(200).json(data)
   }
 }

@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise'
 import crypto from 'node:crypto'
-import { validateUser, validateUUID } from '../../schemas/User.js'
+import { validateUser, validateUUID, validateUUIDs } from '../../schemas/User.js'
 import { validateJoinTeam, validateTeam } from '../../schemas/Team.js'
 
 const connection = await mysql.createConnection({
@@ -161,6 +161,24 @@ class UsersModel {
     }
   }
 
+  static async getMultipleBalances (data) {
+    const validation = validateUUIDs(data)
+    if (!validation.success) {
+      return new ResultObject(false, null, 'VALIDATION ERROR', 'Invalid UUIDs')
+    }
+
+    try {
+      const queryResult = await connection.execute(
+        'SELECT BIN_TO_UUID(user_id) AS user_id, balance FROM user_balance ' +
+        `WHERE BIN_TO_UUID(user_id) IN (${connection.escape(validation.data)})`
+      )
+
+      return new ResultObject(true, queryResult[0])
+    } catch (e) {
+      return new ResultObject(false, null, e, 'No se pudo obtener el balance')
+    }
+  }
+
   static async getOneTeam (data) {
     const validation = validateUUID(data)
     if (!validation.success) {
@@ -197,7 +215,8 @@ class UsersModel {
 
       const teamInfo = {
         ...teamQueryResult[0][0],
-        users: teamUsers[0]
+        users: teamUsers[0],
+        userIds
       }
 
       return new ResultObject(true, teamInfo)
