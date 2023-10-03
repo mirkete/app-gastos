@@ -82,7 +82,7 @@ export class UsersController {
   }
 
   getOneTeam = async (req, res) => {
-    const result = await this.usersModel.getOneTeam(req.params)
+    const result = await this.usersModel.getOneTeam(req.params.id)
     if (!result.success) {
       if (result.error.type === 'VALIDATION ERROR') {
         return res.status(400).json(result.error)

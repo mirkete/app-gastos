@@ -9,7 +9,7 @@ export const createUsersRouter = ({ usersModel }) => {
   UsersRouter.get('/', usersController.getAll)
   UsersRouter.get('/get-balance/:_id', usersController.getBalance)
   UsersRouter.get('/teams', usersController.getTeams)
-  UsersRouter.get('/teams/:_id', usersController.getOneTeam)
+  UsersRouter.get('/teams/:id', usersController.getOneTeam)
   UsersRouter.get('/user-teams/:_id', usersController.getTeams)
   UsersRouter.post('/get-multiple-balances', usersController.getMultipleBalances)
   UsersRouter.post('/create-user', usersController.createUser)

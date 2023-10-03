@@ -118,7 +118,7 @@ class UsersModel {
         return obj.team_id
       })
       const teamsQueryResult = await connection.execute(
-        'SELECT name, currency from teams ' +
+        'SELECT name, currency, BIN_TO_UUID(_id) AS _id from teams ' +
         'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(teamIds) + ')'
       )
       const teams = teamsQueryResult[0]
@@ -180,9 +180,9 @@ class UsersModel {
   }
 
   static async getOneTeam (data) {
-    const validation = validateUUID(data)
+    const validation = validateUUID({ _id: data })
     if (!validation.success) {
-      return new ResultObject(false, null, 'VALIDATION ERROR', 'Invalid UUID')
+      return new ResultObject(false, null, 'VALIDATION ERROR', 'Invalid UUID.')
     }
     try {
       const { _id: teamId } = validation.data
@@ -212,6 +212,10 @@ class UsersModel {
         'SELECT name FROM users ' +
         'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(userIds) + ')'
       )
+
+      // const users = teamUsers[0]
+      // Aca usar el getMultipleBalances para reciclar codigo
+      // Despues poner el usuario y el balance juntos
 
       const teamInfo = {
         ...teamQueryResult[0][0],

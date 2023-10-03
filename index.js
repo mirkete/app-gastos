@@ -13,6 +13,7 @@ const app = express()
 
 app.use(express.json())
 app.use(express.static(path.join(dirname, 'web')))
+app.set('view engine', 'ejs')
 app.use(localURL({ viewsURL: 'web' }))
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 // fijarme porque no dejaba poner headers desde el controller
 
 app.use('/users', createUsersRouter({ usersModel: UsersModel }))
-app.use('/', createViewsRouter({ usersModel: UsersModel }))
+app.use('/', createViewsRouter({ model: UsersModel }))
 
 obtenerPuerto({ desiredPort: PORT })
   .then((finalPort) => {

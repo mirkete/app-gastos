@@ -5,12 +5,17 @@
   --light-red:#F08F8F;
 }
 
+*{
+  box-sizing: border-box;
+}
+
 body{
-  margin: 8px;
+  height: 95%;
 }
 
 html{
   font-size: 67.5%;
+  height: 100%;
 }
 
 .bigger-text{
@@ -37,16 +42,13 @@ html{
   padding: 0;
 }
 
-html, body{
-  height: 100%;
-}
-
 .wrapper{
   display: flex;
   flex-flow: column nowrap;
   gap: 15px;
-  height: 100vh;
+  height: 100%;
   padding: 0px 20px;
+  margin: 10px;
 }
 
 .wrapper > *{
@@ -78,7 +80,7 @@ main{
 
 .balances{
   flex: 1;
-  max-height: 70vh;
+  max-height: 70%;
   overflow: auto;
 }
 
@@ -132,10 +134,15 @@ main{
 }
 
 @media (min-width:650px){
+
   .member{
     display: flex;
     flex-direction: row nowrap; 
     justify-content: flex-start;
+  }
+
+  .wrapper{
+    margin: 10px 30px;
   }
 
   .balance, .balance-positive, .balance-negative{

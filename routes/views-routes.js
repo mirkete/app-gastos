@@ -1,22 +1,17 @@
 import { Router } from 'express'
+import path from 'path'
+import { ViewsController } from '../controllers/views.js'
 
-export const createViewsRouter = () => {
+export const createViewsRouter = ({ model }) => {
   const ViewsRouter = Router()
+  const viewsController = new ViewsController({ model })
 
   ViewsRouter.get('/', (req, res) => {
     const viewsURL = res.locals.viewsURL
-    res.sendFile(viewsURL + '/cosa.html')
+    res.sendFile(path.join(viewsURL, 'index.html'))
   })
 
-  ViewsRouter.get('/cosa', (req, res) => {
-    const viewsURL = res.locals.viewsURL
-    res.sendFile(viewsURL + '/cosa.html')
-  })
-
-  ViewsRouter.get('/group/:id', (req, res) => {
-    const viewsURL = res.locals.viewsURL
-    res.sendFile(viewsURL + '/group-page.html')
-  })
+  ViewsRouter.get('/group/:id', viewsController.getGroup)
 
   return ViewsRouter
 }
