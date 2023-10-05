@@ -19,9 +19,15 @@
             <% data.users.forEach((user) => { %>
               <li class="member">
               <figure class="figure">
-                <div class="balance balance-negative medium-text">
-                  <p><%= user.name %></p>
-                </div>
+                <% if(user.balance > 0){ %>
+                  <div class="balance balance-positive medium-text">
+                    <p><%= user.balance %></p>
+                  </div>
+                <% } else{ %>
+                  <div class="balance balance-positive medium-text">
+                    <p><%= user.balance %></p>
+                  </div>
+                <% } %>
               </figure>
             </li> 
            <% }) %>

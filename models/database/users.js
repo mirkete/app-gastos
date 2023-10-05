@@ -169,8 +169,9 @@ class UsersModel {
 
     try {
       const queryResult = await connection.execute(
-        'SELECT BIN_TO_UUID(user_id) AS user_id, balance FROM user_balance ' +
-        `WHERE BIN_TO_UUID(user_id) IN (${connection.escape(validation.data)})`
+        'SELECT BIN_TO_UUID(user_id) AS user_id, SUM(balance) AS balance FROM user_balance ' +
+        `WHERE BIN_TO_UUID(user_id) IN (${connection.escape(validation.data)}) ` +
+        'GROUP BY user_id'
       )
 
       return new ResultObject(true, queryResult[0])
@@ -209,9 +210,31 @@ class UsersModel {
       })
 
       const teamUsers = await connection.execute(
-        'SELECT name FROM users ' +
+        'SELECT name, BIN_TO_UUID(_id) AS _id FROM users ' +
         'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(userIds) + ')'
       )
+
+      const getBalancesResult = await this.getMultipleBalances(userIds)
+      const userBalances = getBalancesResult.data
+
+      const usersData = []
+      teamUsers[0].forEach(({ _id, name }) => {
+        usersData.push({ _id, name })
+      })
+
+      userBalances.forEach((user) => {
+        const index = usersData.findIndex((val) => val._id === user._id)
+        console.log(index)
+      })
+
+      // const userAndId = {}
+      // teamUsers[0].forEach((user) => {
+      //   userAndId[user._id] = [user.name]
+      // })
+
+      // userBalances[0].forEach((user) => {
+      //   userAndId[user.user_id].push(user.balance)
+      // })
 
       // const users = teamUsers[0]
       // Aca usar el getMultipleBalances para reciclar codigo
@@ -219,8 +242,7 @@ class UsersModel {
 
       const teamInfo = {
         ...teamQueryResult[0][0],
-        users: teamUsers[0],
-        userIds
+        users: usersData
       }
 
       return new ResultObject(true, teamInfo)

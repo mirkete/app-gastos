@@ -1,0 +1,8 @@
+user_id 337bedbf-c18b-46c9-87d8-81ce656413cd
+
+TEAM DATA
+{
+  "_id": "a9912254-b74d-493f-88ec-fc77758513f0",
+  "name": "Test team",
+  "currency": "ARS"
+}
