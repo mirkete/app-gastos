@@ -1,6 +1,6 @@
 import express from 'express'
 import path from 'node:path'
-import UsersModel from './models/database/users.js'
+import { UsersModel } from './models/database/users.js'
 import obtenerPuerto from './utils/obtener-puerto.js'
 import { createUsersRouter } from './routes/users-routes.js'
 import { createViewsRouter } from './routes/views-routes.js'

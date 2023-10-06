@@ -12,7 +12,7 @@ function crearHtmlGrupo ({ name, id }) {
   </a>`
 }
 async function obtenerTeams () {
-  const teamsRequest = await fetch('http://192.168.1.4:3000/users/user-teams/90914877-0d9d-4881-bdce-87e7dc406bf2')
+  const teamsRequest = await fetch('http://192.168.1.5:3000/users/user-teams/90914877-0d9d-4881-bdce-87e7dc406bf2')
   const teams = await teamsRequest.json()
   // En el model, pedir el balance de ese grupo
   const html = teams.map((team, i) => {
@@ -22,7 +22,7 @@ async function obtenerTeams () {
 }
 
 async function obtenerBalance () {
-  fetch('http://192.168.1.4:3000/users/get-balance/90914877-0d9d-4881-bdce-87e7dc406bf2')
+  fetch('http://192.168.1.5:3000/users/get-balance/90914877-0d9d-4881-bdce-87e7dc406bf2')
     .then((res) => { return res.json() })
     .then((data) => {
       const { totalBalance } = data

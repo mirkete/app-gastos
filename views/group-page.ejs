@@ -21,11 +21,11 @@
               <figure class="figure">
                 <% if(user.balance > 0){ %>
                   <div class="balance balance-positive medium-text">
-                    <p><%= user.balance %></p>
+                    <p>+<%= user.balance %></p>
                   </div>
                 <% } else{ %>
-                  <div class="balance balance-positive medium-text">
-                    <p><%= user.balance %></p>
+                  <div class="balance balance-negative medium-text">
+                    <p>-<%= user.balance %></p>
                   </div>
                 <% } %>
               </figure>

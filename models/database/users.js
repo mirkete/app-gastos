@@ -223,8 +223,8 @@ class UsersModel {
       })
 
       userBalances.forEach((user) => {
-        const index = usersData.findIndex((val) => val._id === user._id)
-        console.log(index)
+        const index = usersData.findIndex((val) => val._id === user.user_id)
+        usersData[index].balance = user.balance
       })
 
       // const userAndId = {}
@@ -255,4 +255,8 @@ class UsersModel {
   }
 }
 
-export default UsersModel
+async function finishConnection () {
+  await connection.end()
+}
+
+export { UsersModel, finishConnection }
