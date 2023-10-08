@@ -13,6 +13,6 @@ export class ViewsController {
     }
 
     const data = result.data
-    res.render('group-page', { data })
+    res.render('group-page', { group: data })
   }
 }
