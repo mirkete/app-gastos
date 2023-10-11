@@ -188,8 +188,10 @@ class UsersModel {
     try {
       const { _id: teamId } = validation.data
       const teamQueryResult = await connection.execute(
-        'SELECT name, currency, BIN_TO_UUID(_id) AS _id FROM teams ' +
-        'WHERE BIN_TO_UUID(_id) = ?',
+        'SELECT name, currency, BIN_TO_UUID(teams._id) AS _id, SUM(ABS(balance)) AS total_team_billings FROM teams ' +
+        'INNER JOIN user_balance ON user_balance.team_id = teams._id ' +
+        'WHERE BIN_TO_UUID(_id) = ? ' +
+        'GROUP BY teams._id',
         [teamId]
       )
       if (teamQueryResult[0].length === 0) {
@@ -210,39 +212,15 @@ class UsersModel {
       })
 
       const teamUsers = await connection.execute(
-        'SELECT name, BIN_TO_UUID(_id) AS _id FROM users ' +
-        'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(userIds) + ')'
+        'SELECT name, BIN_TO_UUID(_id) AS _id, SUM(balance) AS total_balance FROM users ' +
+        'LEFT JOIN user_balance ON user_balance.user_id = users._id ' +
+        'WHERE BIN_TO_UUID(_id) IN (' + connection.escape(userIds) + ')' +
+        'GROUP BY users._id'
       )
-
-      const getBalancesResult = await this.getMultipleBalances(userIds)
-      const userBalances = getBalancesResult.data
-
-      const usersData = []
-      teamUsers[0].forEach(({ _id, name }) => {
-        usersData.push({ _id, name })
-      })
-
-      userBalances.forEach((user) => {
-        const index = usersData.findIndex((val) => val._id === user.user_id)
-        usersData[index].balance = user.balance
-      })
-
-      // const userAndId = {}
-      // teamUsers[0].forEach((user) => {
-      //   userAndId[user._id] = [user.name]
-      // })
-
-      // userBalances[0].forEach((user) => {
-      //   userAndId[user.user_id].push(user.balance)
-      // })
-
-      // const users = teamUsers[0]
-      // Aca usar el getMultipleBalances para reciclar codigo
-      // Despues poner el usuario y el balance juntos
 
       const teamInfo = {
         ...teamQueryResult[0][0],
-        users: usersData
+        users: teamUsers[0]
       }
 
       return new ResultObject(true, teamInfo)
@@ -250,7 +228,7 @@ class UsersModel {
       if (e.message === 'GROUP-NOT-FOUND' || e.message === 'EMPTY-GROUP') {
         return new ResultObject(false, null, 'QUERY ERROR', e.message)
       }
-      return new ResultObject(false, null, 'DATABASE ERROR', 'Ha habido un error de servidor')
+      return new ResultObject(false, null, 'DATABASE ERROR', e)
     }
   }
 }

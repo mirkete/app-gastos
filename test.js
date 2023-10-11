@@ -5,7 +5,7 @@ import { UsersModel, finishConnection } from './models/database/users.js'
 test('Obtener balance de team', async () => {
   const expectedData = [{
     user_id: '337bedbf-c18b-46c9-87d8-81ce656413cd',
-    balance: 500
+    balance: 300
   }]
 
   const result = await UsersModel.getMultipleBalances(['337bedbf-c18b-46c9-87d8-81ce656413cd'])
@@ -19,7 +19,8 @@ test('Obtener team', async () => {
     name: 'Test team',
     currency: 'ARS',
     _id: 'a9912254-b74d-493f-88ec-fc77758513f0',
-    users: [{ _id: '337bedbf-c18b-46c9-87d8-81ce656413cd', name: 'Test user', balance: 500 }]
+    total_team_billings: 700,
+    users: [{ name: 'Test user', _id: '337bedbf-c18b-46c9-87d8-81ce656413cd', total_balance: 300 }]
   }
 
   const result = await UsersModel.getOneTeam('a9912254-b74d-493f-88ec-fc77758513f0')

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Practica GRID</title>
+  <title>App-gastos: <%= group.name %></title>
   <link rel="stylesheet" href="/public/group-page-styles.css">
 </head>
 <body>
@@ -19,10 +19,10 @@
           <li class="member">
             <figure class="profile-picture"></figure>
             <div class="person-name positive-balance-name"><%= user.name %></div>
-            <% if(user.balance > 0) { %>
-              <div class="person-balance balance-positive">+<%= user.balance ?? "-"  %></div>
+            <% if(user.total_balance > 0) { %>
+              <div class="person-balance balance-positive">+<%= user.total_balance ?? "-"  %></div>
             <% } else if(user.balance < 0) { %>
-              <div class="person-balance balance-negative">-<%= user.balance ?? "-"  %></div>
+              <div class="person-balance balance-negative">-<%= user.total_balance ?? "-"  %></div>
             <% } else { %>
               <div class="person-balance">0</div>
             <% } %>
